@@ -1,5 +1,5 @@
 import os
-from pydantic import BaseSettings, RedisDsn
+from pydantic import BaseSettings, RedisDsn, PostgresDsn
 
 
 class Settings(BaseSettings):
@@ -12,6 +12,17 @@ class Settings(BaseSettings):
     JAEGER_ENABLED: bool = os.environ.get("JAEGER_ENABLED", True)
     JAEGER_HOST: str = os.environ.get("JAEGER_HOST", "0.0.0.0")
     JAEGER_PORT = os.environ.get("JAEGER_PORT", 6831)
+
+    DATABASE_HOST: str = os.environ.get("DATABASE_HOST", "localhost")
+    DATABASE_PORT: int = os.environ.get("DATABASE_PORT", 5435)
+    DATABASE_USER: str = os.environ.get("DATABASE_USER", "sample")
+    DATABASE_PASSWORD: str = os.environ.get("DATABASE_PASSWORD", "sample")
+    DATABASE_NAME: str = os.environ.get("DATABASE_NAME", "sample")
+
+    DATABASE_URL: PostgresDsn = os.environ.get(
+        "DATABASE_URL",
+        f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@"f"{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+    )
 
 
 settings = Settings()

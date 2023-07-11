@@ -1,15 +1,21 @@
-from typing import Optional
-from pydantic import BaseModel, Field, EmailStr
-import uuid
+from datetime import datetime
+from sqlalchemy.sql.sqltypes import(
+    String,
+    DateTime,
+    Boolean
+)
 
-from core.settings import settings
+from sqlalchemy.orm import(
+    Mapped,
+    mapped_column
+)
+
+from src.models.base import Base
 
 
-class UserCreateSchema(BaseModel):
-    user_id: uuid.UUID = Field(default_factory=str(uuid.uuid4))
-    name: str
-    email: EmailStr
-    age: int = Field(default=20, gt=0, lt=100)
-
-    class Kafka:
-        topic = f"{settings.KAFKA_TOPIC_PREFIX}.event.user-registered"
+class User(Base):
+    __tablename__ = 'user'
+    username: Mapped[str] = mapped_column(String(128), nullable=False, unique=True, index=True)
+    email: Mapped[str] = mapped_column(String(128), nullable=False, unique=True, index=True)
+    date_of_birth: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+    is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
