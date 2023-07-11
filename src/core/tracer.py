@@ -15,13 +15,21 @@ from core.settings import settings
 
 def setup_tracer(service_name: str, app: FastAPI):
     sampler = TraceIdRatioBased(1 / 20)
-    trace_provider = TracerProvider(resource=Resource(attributes={SERVICE_NAME: service_name}), sampler=sampler)
+    trace_provider = TracerProvider(
+        resource=Resource(attributes={SERVICE_NAME: service_name}), sampler=sampler
+    )
     jaeger_exporter = JaegerExporter(
-        agent_host_name=settings.JAEGER_HOST, agent_port=settings.JAEGER_PORT, udp_split_oversized_batches=True
+        agent_host_name=settings.JAEGER_HOST,
+        agent_port=settings.JAEGER_PORT,
+        udp_split_oversized_batches=True,
     )
 
-    trace_provider.add_span_processor(span_processor=BatchSpanProcessor(jaeger_exporter))
-    trace_provider.add_span_processor(span_processor=BatchSpanProcessor(ConsoleSpanExporter()))
+    trace_provider.add_span_processor(
+        span_processor=BatchSpanProcessor(jaeger_exporter)
+    )
+    trace_provider.add_span_processor(
+        span_processor=BatchSpanProcessor(ConsoleSpanExporter())
+    )
 
     trace.set_tracer_provider(trace_provider)
 
@@ -30,6 +38,5 @@ def setup_tracer(service_name: str, app: FastAPI):
     SQLAlchemyInstrumentor().instrument()
     AioHttpClientInstrumentor().instrument()
     RedisInstrumentor().instrument()
-
 
     return trace_provider

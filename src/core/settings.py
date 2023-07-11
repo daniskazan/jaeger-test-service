@@ -21,7 +21,8 @@ class Settings(BaseSettings):
 
     DATABASE_URL: PostgresDsn = os.environ.get(
         "DATABASE_URL",
-        f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@"f"{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+        f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@"
+        f"{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}",
     )
 
 

@@ -26,17 +26,20 @@ async def shutdown():
     logger.info(f"Gracefully shutdown all services {container.registrations.__dict__}")
     logger.info("Stopped the server")
 
+
 @app.get("/test")
 async def tmp():
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://httpbin.org/get') as resp:
+        async with session.get("http://httpbin.org/get") as resp:
             return await resp.text()
 
 
 if settings.JAEGER_ENABLED:
-    setup_tracer(service_name='fastapi-app', app=app)
+    setup_tracer(service_name="fastapi-app", app=app)
     logger.info("Instrumentation started succefully")
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, log_level=logging.DEBUG, reload=True)
+    uvicorn.run(
+        "main:app", host="0.0.0.0", port=8001, log_level=logging.DEBUG, reload=True
+    )

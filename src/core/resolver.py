@@ -3,7 +3,7 @@ from aiokafka import AIOKafkaProducer
 from aiocache import RedisCache
 from loguru import logger
 
-from api.v1.user.schema import UserSchema
+from api.v1.user.schema import UserCreateSchema, UserOutputSchema, UserUpdateSchema
 from core.settings import settings
 from core import redis
 from core import kafka
@@ -15,22 +15,24 @@ container = punq.Container()
 
 
 async def register_deps() -> None:
-
     kafka.aioproducer = AIOKafkaProducer(  # noqa
-        client_id='authorization-service',
-        acks='all',
+        client_id="authorization-service",
+        acks="all",
         enable_idempotence=True,
-        bootstrap_servers=settings.KAFKA_DSN
+        bootstrap_servers=settings.KAFKA_DSN,
     )
     redis.cache = RedisCache(endpoint=settings.REDIS_HOST, port=settings.REDIS_PORT)
-    user_service = UserDatabaseService(model=User, schema=UserSchema)
+    user_service = UserDatabaseService(
+        model=User,
+        create_schema=UserCreateSchema,
+        update_schema=UserUpdateSchema,
+        output_schema=UserOutputSchema,
+    )
 
     container.register(service=AIOKafkaProducer, instance=kafka.aioproducer)
 
     container.register(service=RedisCache, instance=redis.cache)
     container.register(UserDatabaseService, instance=user_service)
-
-
 
     kafka_producer = container.resolve(service_key=AIOKafkaProducer)
     await kafka_producer.start()
@@ -48,6 +50,7 @@ def get_redis_client() -> RedisCache:
 
 def get_kafka_producer():
     return container.resolve(service_key=AIOKafkaProducer)
+
 
 def get_user_dao_postgres() -> UserDatabaseService:
     return container.resolve(service_key=UserDatabaseService)
