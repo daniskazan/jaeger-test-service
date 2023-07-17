@@ -21,9 +21,11 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
+from src.models import (
+    book,
+    user
+)
 from src.models.base import Base
-from src.models import user
-
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

@@ -22,7 +22,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         await self.__set_body(request)
         try:
             body = await request.json()
-        except JSONDecodeError:
+        except (JSONDecodeError, UnicodeDecodeError):
             body = {}
         return body
 

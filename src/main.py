@@ -1,11 +1,12 @@
 import aiohttp
-from fastapi import FastAPI, Request
+from aiocache import RedisCache
+from fastapi import FastAPI, Request, Depends
 import uvicorn
 from loguru import logger
 import logging
 
 from api.v1.router import router as v1_router
-from core.resolver import container, register_deps, stop_services
+from core.resolver import container, register_deps, stop_services, get_redis_client
 from core.tracer import setup_tracer
 from core.settings import settings
 from core.middleware import LoggingMiddleware
@@ -27,14 +28,6 @@ async def shutdown():
     logger.info("Stopped the server")
 
 
-@app.get("/test")
-async def tmp():
-    async with aiohttp.ClientSession() as session:
-        async with session.get("https://google.com") as resp:
-            return await resp.text()
-@app.get('/excp')
-async def excp(r: Request):
-    return
 
 if settings.JAEGER_ENABLED:
     setup_tracer(service_name="fastapi-app", app=app)
