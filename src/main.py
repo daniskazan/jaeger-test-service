@@ -1,5 +1,5 @@
 import aiohttp
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 import uvicorn
 from loguru import logger
 import logging
@@ -8,12 +8,12 @@ from api.v1.router import router as v1_router
 from core.resolver import container, register_deps, stop_services
 from core.tracer import setup_tracer
 from core.settings import settings
-
+from core.middleware import LoggingMiddleware
 
 app = FastAPI()
 app.include_router(v1_router)
 
-
+app.add_middleware(LoggingMiddleware)
 @app.on_event("startup")
 async def startup():
     await register_deps()
@@ -32,7 +32,9 @@ async def tmp():
     async with aiohttp.ClientSession() as session:
         async with session.get("https://google.com") as resp:
             return await resp.text()
-
+@app.get('/excp')
+async def excp(r: Request):
+    return
 
 if settings.JAEGER_ENABLED:
     setup_tracer(service_name="fastapi-app", app=app)

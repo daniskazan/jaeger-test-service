@@ -27,9 +27,9 @@ def setup_tracer(service_name: str, app: FastAPI):
     trace_provider.add_span_processor(
         span_processor=BatchSpanProcessor(jaeger_exporter)
     )
-    trace_provider.add_span_processor(
-        span_processor=BatchSpanProcessor(ConsoleSpanExporter())
-    )
+    # trace_provider.add_span_processor(
+    #     span_processor=BatchSpanProcessor(ConsoleSpanExporter())
+    # )
 
     trace.set_tracer_provider(trace_provider)
 
