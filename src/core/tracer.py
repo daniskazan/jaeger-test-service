@@ -14,7 +14,7 @@ from core.settings import settings
 
 
 def setup_tracer(service_name: str, app: FastAPI):
-    sampler = TraceIdRatioBased(1 / 20)
+    sampler = TraceIdRatioBased(1 / 2)
     trace_provider = TracerProvider(
         resource=Resource(attributes={SERVICE_NAME: service_name}), sampler=sampler
     )

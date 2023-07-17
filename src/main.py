@@ -30,13 +30,13 @@ async def shutdown():
 @app.get("/test")
 async def tmp():
     async with aiohttp.ClientSession() as session:
-        async with session.get("http://httpbin.org/get") as resp:
+        async with session.get("https://google.com") as resp:
             return await resp.text()
 
 
 if settings.JAEGER_ENABLED:
     setup_tracer(service_name="fastapi-app", app=app)
-    logger.info("Instrumentation started succefully")
+    logger.info("Instrumentation started successfully")
 
 
 if __name__ == "__main__":

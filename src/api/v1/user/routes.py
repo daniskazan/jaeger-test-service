@@ -20,3 +20,20 @@ async def create_user(
 @router.get("/")
 async def get_users(service: UserDatabaseService = Depends(get_user_dao_postgres)):
     return await service.get_all()
+
+@router.post('/users/qq')
+async def blal(data: UserCreateSchema):
+    return data
+
+@router.get("/{user_id}")
+async def get_by_id(
+    user_id: uuid.UUID, service: UserDatabaseService = Depends(get_user_dao_postgres)
+):
+    return await service.get(object_id=user_id)
+
+
+@router.delete("/{user_id}")
+async def delete_by_id(
+    user_id: uuid.UUID, service: UserDatabaseService = Depends(get_user_dao_postgres)
+):
+    return await service.delete(object_id=user_id)
