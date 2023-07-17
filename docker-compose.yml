@@ -2,6 +2,23 @@ version: '3.7'
 
 
 services:
+  api:
+    build:
+      context: .
+    container_name: api
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - db
+      - kafka
+      - kafka-ui
+      - zookeeper
+      - jaeger
+    networks:
+      jaeger-example:
+
   redis:
     image: redis:6.2.5
     restart: on-failure
@@ -12,6 +29,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      jaeger-example:
 
   db:
     image: postgres:15.1-alpine
@@ -30,6 +49,8 @@ services:
       interval: 30s
       timeout: 3s
       retries: 3
+    networks:
+      jaeger-example:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.2.4
@@ -38,14 +59,16 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      jaeger-example:
+
 
   kafka:
     image: confluentinc/cp-kafka:5.3.1
-    depends_on:
-      - zookeeper
     ports:
       - "9092:9092"
       - "9997:9997"
+    container_name: kafka
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -55,6 +78,10 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       JMX_PORT: 9997
       KAFKA_JMX_OPTS: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Dcom.sun.management.jmxremote.rmi.port=9997
+    depends_on:
+      - zookeeper
+    networks:
+      jaeger-example:
 
   kafka-ui:
     container_name: kafka-ui
@@ -62,7 +89,6 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - zookeeper
       - kafka
     environment:
       KAFKA_CLUSTERS_0_NAME: local
@@ -80,6 +106,8 @@ services:
       - "16686:16686"
       - "14268:14268"
       - "9411:9411"
+    networks:
+      jaeger-example:
 
 volumes:
   postgres_data:
