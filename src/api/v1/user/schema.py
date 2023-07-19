@@ -1,9 +1,9 @@
 import uuid
 from datetime import date
+from typing import List
+
 from pydantic import BaseModel as Base
 from pydantic import EmailStr
-from pydantic import PositiveInt
-from pydantic import validator
 
 
 class BaseModel(Base):
@@ -17,6 +17,9 @@ class UserCreateSchema(BaseModel):
     email: EmailStr
     date_of_birth: date
 
+class BookOutputSchema(BaseModel):
+    id: uuid.UUID
+    name: str
 
 class UserUpdateSchema(UserCreateSchema):
     pass
@@ -26,3 +29,4 @@ class UserOutputSchema(UserCreateSchema):
     id: uuid.UUID
     created_at: date
     updated_at: date
+    books: List[BookOutputSchema]
