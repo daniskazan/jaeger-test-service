@@ -2,22 +2,22 @@ version: '3.7'
 
 
 services:
-  api:
-    build:
-      context: .
-    container_name: api
-    restart: always
-    ports:
-      - "8000:8000"
-    depends_on:
-      - redis
-      - db
-      - kafka
-      - kafka-ui
-      - zookeeper
-      - jaeger
-    networks:
-      jaeger-example:
+#  api:
+#    build:
+#      context: .
+#    container_name: api
+#    restart: always
+#    ports:
+#      - "8000:8000"
+#    depends_on:
+#      - redis
+#      - db
+#      - kafka
+#      - kafka-ui
+#      - zookeeper
+#      - jaeger
+#    networks:
+#      jaeger-example:
 
   redis:
     image: redis:6.2.5

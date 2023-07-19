@@ -4,7 +4,7 @@ from sqlalchemy import (
     ForeignKey
 )
 
-from src.models.base import Base
+from models.base import Base
 
 user_book_mapping = Table(
     "user_book",
