@@ -19,11 +19,14 @@ services:
 #    networks:
 #      jaeger-example:
 
-  redis:
-    image: redis:6.2.5
-    restart: on-failure
+  redis-stack-svc:
+    image: redis/redis-stack-server:latest
+    # use REDIS_ARGS for redis-stack-server instead of command arguments
+    environment:
+      - REDIS_ARGS=--save 1200 32
     ports:
       - "6382:6379"
+    container_name: redis_stack
     healthcheck:
       test: redis-cli ping
       interval: 30s

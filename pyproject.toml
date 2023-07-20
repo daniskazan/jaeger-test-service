@@ -29,6 +29,7 @@ alembic = "^1.11.1"
 opentelemetry-instrumentation-sqlalchemy = "^0.39b0"
 opentelemetry-instrumentation-asyncpg = "0.39b0"
 asyncpg = {extras = ["binary"], version = "^0.28.0"}
+redis = "^4.6.0"
 
 
 [tool.poetry.group.dev.dependencies]
