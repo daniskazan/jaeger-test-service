@@ -21,9 +21,6 @@ async def create_user(
 async def get_users(service: UserDatabaseService = Depends(get_user_dao_postgres)):
     return await service.get_all()
 
-@router.post('/users/qq')
-async def blal(data: UserCreateSchema):
-    return data
 
 @router.get("/{user_id}")
 async def get_by_id(

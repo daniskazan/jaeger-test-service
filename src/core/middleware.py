@@ -27,11 +27,11 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         return body
 
     async def dispatch(
-            self, request: Request, call_next: RequestResponseEndpoint
+        self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
         body = await self.get_body(request=request)
         span = trace.get_current_span()
-        span.add_event('request.body', attributes=body)
+        span.add_event("request.body", attributes=body)
 
         response = await call_next(request)
 

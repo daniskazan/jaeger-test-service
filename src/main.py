@@ -15,6 +15,8 @@ app = FastAPI()
 app.include_router(v1_router)
 
 app.add_middleware(LoggingMiddleware)
+
+
 @app.on_event("startup")
 async def startup():
     await register_deps()
@@ -26,7 +28,6 @@ async def shutdown():
     await stop_services()
     logger.info(f"Gracefully shutdown all services {container.registrations.__dict__}")
     logger.info("Stopped the server")
-
 
 
 if settings.JAEGER_ENABLED:

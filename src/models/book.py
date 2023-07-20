@@ -8,6 +8,8 @@ from .association_table import user_book_mapping
 
 
 class Book(Base):
-    __tablename__ = 'books'
+    __tablename__ = "books"
     name: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
-    authors: Mapped[List["User"]] = relationship(secondary=user_book_mapping, back_populates="books")
+    authors: Mapped[List["User"]] = relationship(
+        secondary=user_book_mapping, back_populates="books"
+    )

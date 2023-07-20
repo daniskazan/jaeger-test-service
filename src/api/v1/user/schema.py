@@ -17,9 +17,11 @@ class UserCreateSchema(BaseModel):
     email: EmailStr
     date_of_birth: date
 
+
 class BookOutputSchema(BaseModel):
     id: uuid.UUID
     name: str
+
 
 class UserUpdateSchema(UserCreateSchema):
     pass

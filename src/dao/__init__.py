@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from core.settings import settings
 
-engine = create_async_engine(url=settings.DATABASE_URL)
+engine = create_async_engine(url=settings.DATABASE_URL, echo=True)
 
 DatabaseModel = TypeVar("DatabaseModel", bound=DeclarativeBase)
 CreateSchema = TypeVar("CreateSchema", bound=BaseModel)

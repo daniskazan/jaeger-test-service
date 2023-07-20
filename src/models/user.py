@@ -20,7 +20,9 @@ class User(Base):
         DateTime(timezone=True), nullable=True
     )
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
-    books: Mapped[List["Book"]] = relationship(secondary=user_book_mapping, back_populates="authors")
+    books: Mapped[List["Book"]] = relationship(
+        secondary=user_book_mapping, back_populates="authors", lazy="joined"
+    )
 
     def __repr__(self):
         return f"<User> {self.username}"

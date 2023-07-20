@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import HTTPException
 
-
+from sqlalchemy.engine import ChunkedIteratorResult
 from sqlalchemy import Select, func, select, or_
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.orm import selectinload
@@ -73,17 +73,18 @@ class DatabaseService(Generic[DatabaseModel, CreateSchema, UpdateSchema, OutputS
 
     async def get_by_ids(
         self,
-        list_ids: List[Union[UUID, str]],
+        list_ids: List[UUID],
     ) -> List[DatabaseModel]:
         query = select(self.model).where(self.model.id.in_(list_ids))
         response = await self.session.execute(query)
         try:
-            rows = response.all()
+            result: ChunkedIteratorResult = response.all()
         except NoResultFound:
             raise HTTPException(status_code=404, detail="Не найдено")
-        return [self.output_schema(**row._data[0].__dict__) for row in rows]
+        return [self.output_schema(obj._data[0]) for obj in result]
 
-    async def get_all(self):
+    async def get_all(self) -> List[OutputSchema]:
         query = select(self.model)
-        result = await self.session.execute(query)
-        return [self.output_schema.from_orm(obj._data[0]) for obj in result.all()]
+        result: ChunkedIteratorResult = await self.session.execute(query)
+
+        return [self.output_schema.from_orm(obj._data[0]) for obj in result.unique()]
