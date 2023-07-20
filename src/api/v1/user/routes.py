@@ -1,6 +1,5 @@
 import uuid
-
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from api.v1.user.schema import UserCreateSchema, UserOutputSchema
 from core.resolver import get_user_dao_postgres

@@ -73,7 +73,7 @@ class DatabaseService(Generic[DatabaseModel, CreateSchema, UpdateSchema, OutputS
 
     async def get_by_ids(
         self,
-        list_ids: List[UUID],
+        list_ids: List[Union[str, UUID]],
     ) -> List[DatabaseModel]:
         query = select(self.model).where(self.model.id.in_(list_ids))
         response = await self.session.execute(query)
